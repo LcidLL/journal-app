@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  reading_status: MyString
+  chapter_summary: MyText
+  target_date: 2025-07-06
+  book: one
+
+two:
+  reading_status: MyString
+  chapter_summary: MyText
+  target_date: 2025-07-06
+  book: two

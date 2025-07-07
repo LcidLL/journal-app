@@ -1,0 +1,23 @@
+<h1>Welcome!</h1>
+<% if !user_signed_in? %>
+    <h3>You are not signed in!</h3>
+    <%= link_to "Sign in", new_user_session_path, class: "btn btn-primary" %>
+    <%= link_to "Sign up", new_user_registration_path, class: "btn btn-secondary" %>
+<% else %>
+    <h3>You are signed in as <%= current_user.email %>!</h3>
+
+    <div class="navigation-section">
+      <div class="nav-buttons">
+        <%= link_to "📚 My Library", books_path, class: "btn btn-primary nav-btn" %>
+        <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-info" %>
+      </div>
+    </div>
+
+    <br>
+
+    <div>
+        <%= button_to "Logout", destroy_user_session_path, method: :delete, 
+            class: "btn btn-danger", 
+            data: { confirm: "Are you sure you want to logout?" } %>
+    </div>
+<% end %>
