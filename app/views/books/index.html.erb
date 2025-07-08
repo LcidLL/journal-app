@@ -2,84 +2,49 @@
   <div class="page-header">
     <h1>📚 My Library</h1>
     <div class="header-actions">
-      <%= link_to "🏠 Dashboard", root_path, class: "btn btn-secondary" %>
-      <%= link_to "✅ View Tasks", tasks_path, class: "btn btn-info" %>
-      <%= link_to "➕ Add New Book", new_book_path, class: "btn btn-success" %>
+      <%= link_to "Dashboard", root_path, class: "btn btn-secondary" %>
+      <%= link_to "Add New Book", new_book_path, class: "btn btn-success" %>
     </div>
   </div>
 
-  <div class="search-section">
-    <%= form_with url: books_path, method: :get, local: true, class: "search-form" do |form| %>
-      <%= form.text_field :search, placeholder: "Search books by title...", 
-                         value: params[:search], class: "search-input" %>
-      <%= form.submit "🔍 Search", class: "btn btn-primary" %>
-      <% if params[:search].present? %>
-        <%= link_to "Clear", books_path, class: "btn btn-outline" %>
-      <% end %>
-    <% end %>
-  </div>
-
-  <% if @books.any? %>
-    <div class="books-stats">
-      <p>Showing <%= @books.count %> book<%= 's' if @books.count != 1 %>
-      <% if params[:search].present? %>
-        for "<%= params[:search] %>"
-      <% end %>
-      </p>
-    </div>
-
-    <div class="books-grid">
+  <div class="books-grid">
+    <% if @books.any? %>
       <% @books.each do |book| %>
         <div class="book-card">
-          <div class="book-header">
-            <h3><%= link_to book.title, book_path(book), class: "book-title-link" %></h3>
-            <div class="book-progress">
-              <span class="progress-text"><%= book.reading_progress %>% complete</span>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: <%= book.reading_progress %>%"></div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="book-details">
-            <p><strong>📖 Author:</strong> <%= book.author %></p>
+          <div class="book-info">
+            <h3><%= link_to book.title, book %></h3>
+            <p class="author">by <%= book.author %></p>
             <% if book.publish_date.present? %>
-              <p><strong>📅 Published:</strong> <%= book.publish_date.strftime("%Y") %></p>
-            <% end %>
-            <p><strong>📝 Tasks:</strong> <%= book.tasks.count %></p>
-            <% if book.tasks.any? %>
-              <p><strong>✅ Completed:</strong> <%= book.tasks.completed.count %></p>
+              <p class="publish-date"><%= book.publish_date.strftime("%Y") %></p>
             <% end %>
           </div>
 
-          <% if book.summary.present? %>
-            <div class="book-summary">
-              <p><%= truncate(book.summary, length: 100) %></p>
+          <div class="book-progress">
+            <div class="progress-info">
+              <span class="task-count"><%= book.tasks.count %> notes</span>
             </div>
-          <% end %>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: <%= book.reading_progress %>%"></div>
+            </div>
+          </div>
 
           <div class="book-actions">
-            <%= link_to "👁️ View", book_path(book), class: "btn btn-sm btn-primary" %>
-            <%= link_to "✏️ Edit", edit_book_path(book), class: "btn btn-sm btn-info" %>
-            <%= link_to "➕ Add Task", new_book_task_path(book), class: "btn btn-sm btn-success" %>
-            <%= link_to "🗑️ Delete", book_path(book), method: :delete, 
-                       class: "btn btn-sm btn-danger",
-                       data: { confirm: "Are you sure you want to delete '#{book.title}'? This will also delete all associated tasks." } %>
+            <%= link_to "View", book, class: "btn btn-primary btn-sm" %>
+            <%= link_to "Edit", edit_book_path(book), class: "btn btn-primary btn-sm" %>
+          </div>
+
+          <div class="book-summary">
+            <% if book.summary.present? %>
+              <p><%= truncate(book.summary, length: 80) %></p>
+            <% end %>
           </div>
         </div>
       <% end %>
-    </div>
-  <% else %>
-    <div class="empty-state">
-      <div class="empty-icon">📚</div>
-      <h3>No books found</h3>
-      <% if params[:search].present? %>
-        <p>No books match your search for "<%= params[:search] %>"</p>
-        <%= link_to "Show All Books", books_path, class: "btn btn-primary" %>
-      <% else %>
-        <p>Start building your library by adding your first book!</p>
-        <%= link_to "Add Your First Book", new_book_path, class: "btn btn-primary btn-lg" %>
-      <% end %>
-    </div>
-  <% end %>
+    <% else %>
+      <div class="empty-state">
+        <h3>No books in your library yet!</h3>
+        <p>Start building your reading collection.</p>
+      </div>
+    <% end %>
+  </div>
 </div>

@@ -1,2 +1,66 @@
-<h1>Books#show</h1>
-<p>Find me in app/views/books/show.html.erb</p>
+<div class="book-details">
+  <div class="book-header">
+    <h1><%= @book.title %></h1>
+    <p class="book-author">by <%= @book.author %></p>
+    <% if @book.publish_date.present? %>
+      <p class="publish-date">Published: <%= @book.publish_date.strftime("%B %Y") %></p>
+    <% end %>
+  </div>
+
+  <div class="book-actions">
+    <%= link_to "Edit Book", edit_book_path(@book), class: "btn btn-info" %>
+    <%= link_to "Add New Note", new_book_task_path(@book), class: "btn btn-info" %>
+    <%= link_to "Delete Book", @book, 
+        data: { turbo_method: :delete, confirm: "Are you sure?" }, class: "btn btn-danger" %>
+    <%= link_to "Back to Library", books_path, class: "btn btn-secondary" %>
+  </div>
+
+  <% if @book.summary.present? %>
+    <div class="book-summary">
+      <h3>Summary</h3>
+      <p><%= simple_format(@book.summary) %></p>
+    </div>
+  <% end %>
+
+  <div class="tasks-section">
+    <div class="tasks-header">
+      <h3>Reading Status</h3>
+    </div>
+
+    <% if @tasks.any? %>
+      <div class="tasks-list">
+        <% @tasks.each do |task| %>
+          <div class="task-item">
+            <div class="task-status">
+              <span class="badge badge-<%= task.status_color %>">
+                <%= task.reading_status.humanize %>
+              </span>
+              <% if task.overdue? %>
+                <span class="badge badge-danger">Overdue</span>
+              <% end %>
+            </div>
+            
+            <div class="task-details">
+              <% if task.target_date.present? %>
+                <p><strong>Target Date:</strong> <%= task.target_date.strftime("%B %d, %Y") %></p>
+              <% end %>
+              
+              <% if task.chapter_summary.present? %>
+                <p><strong>Notes:</strong> <%= truncate(task.chapter_summary, length: 100) %></p>
+              <% end %>
+            </div>
+
+            <div class="task-actions">
+              <%= link_to "View", [@book, task], class: "btn btn-info btn-sm" %>
+              <%= link_to "Edit", edit_book_task_path(@book, task), class: "btn btn-info btn-sm" %>
+              <%= link_to "Delete", [@book, task], 
+                  data: { turbo_method: :delete, confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p>No reading status yet.</p>
+    <% end %>
+  </div>
+</div>

@@ -10,9 +10,9 @@ class Book < ApplicationRecord
   scope :by_author, ->(author) { where(author: author) }
 
   def reading_progress
-    total_tasks = task.count
+    total_tasks = tasks.count
     completed_tasks = tasks.where(reading_status: 'completed').count
-    return 0 if total_tasks = 0
+    return 0 if total_tasks == 0
     (completed_tasks.to_f / total_tasks * 100).round(2)
   end
 end

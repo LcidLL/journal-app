@@ -1,18 +1,4 @@
 Rails.application.routes.draw do
-  get "tasks/show"
-  get "tasks/new"
-  get "tasks/create"
-  get "tasks/edit"
-  get "tasks/update"
-  get "tasks/destroy"
-  get "tasks/index"
-  get "books/index"
-  get "books/show"
-  get "books/new"
-  get "books/create"
-  get "books/edit"
-  get "books/update"
-  get "books/destroy"
   devise_for :users
   get "pages/index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -30,7 +16,7 @@ Rails.application.routes.draw do
   get "/dashboard", to: "pages#index"
 
   resources :books do
-    resources :task, except: [:index]
+    resources :tasks, except: [:index], path: "task"
   end
 
   get "/library", to: "books#index"

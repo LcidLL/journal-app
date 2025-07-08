@@ -1,2 +1,59 @@
-<h1>Tasks#show</h1>
-<p>Find me in app/views/tasks/show.html.erb</p>
+<div class="task-details">
+  <div class="task-header">
+    <h1>Reading Task Details</h1>
+    <h2>for "<%= @book.title %>" by <%= @book.author %></h2>
+  </div>
+
+  <div class="task-info">
+    <div class="status-section">
+      <h3>Status</h3>
+      <span class="badge badge-<%= @task.status_color %>">
+        <%= @task.reading_status.humanize %>
+      </span>
+      <% if @task.overdue? %>
+        <span class="badge badge-danger">Overdue</span>
+      <% end %>
+    </div>
+
+    <% if @task.target_date.present? %>
+      <div class="date-section">
+        <h3>Target Date</h3>
+        <p><%= @task.target_date.strftime("%B %d, %Y") %></p>
+        <% if @task.target_date < Date.current && @task.reading_status != 'completed' %>
+          <small class="text-danger">
+            (<%= distance_of_time_in_words(@task.target_date, Date.current) %> overdue)
+          </small>
+        <% elsif @task.target_date > Date.current %>
+          <small class="text-info">
+            (<%= distance_of_time_in_words(Date.current, @task.target_date) %> remaining)
+          </small>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @task.chapter_summary.present? %>
+      <div class="summary-section">
+        <h3>Notes/Summary</h3>
+        <div class="summary-content">
+          <%= simple_format(@task.chapter_summary) %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="dates-section">
+      <h3>Task Information</h3>
+      <p><strong>Created:</strong> <%= @task.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+      <% if @task.updated_at != @task.created_at %>
+        <p><strong>Last Updated:</strong> <%= @task.updated_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="task-actions">
+    <%= link_to "Edit Task", edit_book_task_path(@book, @task), class: "btn btn-warning" %>
+    <%= link_to "Delete Task", [@book, @task], 
+        data: { turbo_method: :delete, confirm: "Are you sure?" }, class: "btn btn-danger" %>
+    <%= link_to "Back to Book", @book, class: "btn btn-secondary" %>
+    <%= link_to "All Tasks", tasks_path, class: "btn btn-info" %>
+  </div>
+</div>
