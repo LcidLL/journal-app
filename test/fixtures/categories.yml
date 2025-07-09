@@ -1,0 +1,14 @@
+one:
+  category_name: Work Tasks
+  description: Tasks related to work
+  user: one
+
+two:
+  category_name: Personal Tasks
+  description: Personal tasks and errands
+  user: one
+
+three:
+  category_name: Other User Category
+  description: Category belonging to another user
+  user: two

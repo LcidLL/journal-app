@@ -1,13 +1,27 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
-  reading_status: MyString
-  chapter_summary: MyText
-  target_date: 2025-07-06
-  book: one
+  task_name: Complete project
+  description: Finish the main project by deadline
+  status: priority
+  due_date: <%= 1.week.from_now.to_date %>
+  category: one
 
 two:
-  reading_status: MyString
-  chapter_summary: MyText
-  target_date: 2025-07-06
-  book: two
+  task_name: Buy groceries
+  description: Get milk, bread, and eggs
+  status: completed
+  due_date: <%= Date.current %>
+  category: two
+
+three:
+  task_name: Call client
+  description: Follow up on the proposal
+  status: in_progress
+  due_date: <%= 2.days.from_now.to_date %>
+  category: one
+
+four:
+  task_name: Overdue task
+  description: This task is overdue
+  status: priority
+  due_date: <%= 2.days.ago.to_date %>
+  category: one
