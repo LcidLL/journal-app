@@ -2,8 +2,8 @@
   <div class="page-header">
     <h1>📚 My Library</h1>
     <div class="header-actions">
-      <%= link_to "Dashboard", root_path, class: "btn btn-secondary" %>
-      <%= link_to "Add New Book", new_book_path, class: "btn btn-success" %>
+      <%= link_to "Add New Book", new_book_path, class: "btn btn-info" %>
+      <%= link_to "Back to Dashboard", root_path, class: "btn btn-secondary" %>
     </div>
   </div>
 
@@ -23,14 +23,11 @@
             <div class="progress-info">
               <span class="task-count"><%= book.tasks.count %> notes</span>
             </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: <%= book.reading_progress %>%"></div>
-            </div>
           </div>
 
           <div class="book-actions">
-            <%= link_to "View", book, class: "btn btn-primary btn-sm" %>
-            <%= link_to "Edit", edit_book_path(book), class: "btn btn-primary btn-sm" %>
+            <%= link_to "View", book, class: "btn btn-info btn-sm" %>
+            <%= link_to "Edit", edit_book_path(book), class: "btn btn-info btn-sm" %>
           </div>
 
           <div class="book-summary">

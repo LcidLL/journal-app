@@ -22,9 +22,10 @@ class TasksController < ApplicationController
     @task = @book.tasks.build(task_params)
     
     if @task.save
-      redirect_to @book, notice: 'Reading task was successfully created.'
+      redirect_to @book, notice: "Reading task for '#{@book.title}' was successfully created!"
     else
-      render :new
+      flash.now[:alert] = "There were errors creating your reading task. Please check the fields below."
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -33,15 +34,17 @@ class TasksController < ApplicationController
 
   def update
     if @task.update(task_params)
-      redirect_to @book, notice: 'Reading task was successfully updated.'
+      redirect_to @book, notice: "Reading task for '#{@book.title}' was successfully updated!"
     else
-      render :edit
+      flash.now[:alert] = "There were errors updating your reading task. Please check the fields below."
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
+    book_title = @book.title
     @task.destroy
-    redirect_to @book, notice: 'Reading task was successfully deleted.'
+    redirect_to @book, notice: "Reading task for '#{book_title}' was successfully deleted."
   end
 
   private
@@ -56,9 +59,9 @@ class TasksController < ApplicationController
 
   def check_owner
     if @book
-      redirect_to books_path, alert: 'Access denied.' unless @book.user == current_user
+      redirect_to books_path, alert: 'Access denied. You can only access your own books.' unless @book.user == current_user
     elsif @task&.book
-      redirect_to books_path, alert: 'Access denied.' unless @task.book.user == current_user
+      redirect_to books_path, alert: 'Access denied. You can only access your own reading tasks.' unless @task.book.user == current_user
     end
   end
 

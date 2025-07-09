@@ -9,7 +9,7 @@
 
   <div class="book-actions">
     <%= link_to "Edit Book", edit_book_path(@book), class: "btn btn-info" %>
-    <%= link_to "Add New Note", new_book_task_path(@book), class: "btn btn-info" %>
+    <%= link_to "Add New Notes", new_book_task_path(@book), class: "btn btn-info" %>
     <%= link_to "Delete Book", @book, 
         data: { turbo_method: :delete, confirm: "Are you sure?" }, class: "btn btn-danger" %>
     <%= link_to "Back to Library", books_path, class: "btn btn-secondary" %>
@@ -24,7 +24,7 @@
 
   <div class="tasks-section">
     <div class="tasks-header">
-      <h3>Reading Status</h3>
+      <h3>Reading Notes & Targets</h3>
     </div>
 
     <% if @tasks.any? %>
