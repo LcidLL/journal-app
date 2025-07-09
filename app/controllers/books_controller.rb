@@ -6,7 +6,6 @@ class BooksController < ApplicationController
 
   def index
     @books = current_user.books.recent.includes(:tasks)
-    @books = @books.where("title ILIKE ?", "%#{params[:search]}%") if params[:search].present?
   end
 
   def show

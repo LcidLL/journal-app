@@ -3,11 +3,11 @@ class Book < ApplicationRecord
   has_many :tasks, dependent: :destroy
 
   validates :title, presence: { message: "cannot be blank" }, 
-    length: { minimum: 1, maximum: 255, message: "must be between 1 and 255 characters" }
+    length: { minimum: 1, maximum: 255 }
   validates :author, presence: { message: "cannot be blank" }, 
-    length: { minimum: 1, maximum: 255, message: "must be between 1 and 255 characters" }
+    length: { minimum: 1, maximum: 255 }
   validates :user_id, presence: true
-  validates :summary, length: { maximum: 2000, message: "cannot exceed 2000 characters" }, 
+  validates :summary, length: { maximum: 2000 }, 
     allow_blank: true
   validates :publish_date, presence: false
   validate :publish_date_cannot_be_in_future, if: :publish_date?

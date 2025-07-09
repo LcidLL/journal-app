@@ -3,6 +3,7 @@ class TasksController < ApplicationController
   before_action :set_book, except: [:index]
   before_action :set_task, only: [:show, :edit, :update, :destroy]
   before_action :check_owner
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index
     @tasks = current_user.tasks.includes(:book).order(:target_date)
