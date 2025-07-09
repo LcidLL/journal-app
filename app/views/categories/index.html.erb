@@ -1,27 +1,8 @@
 <div class="page-header">
   <h1>My Journal</h1>
   <div class="page-actions">
-    <%= link_to "New Category", new_category_path, class: "btn btn-primary" %>
-    <%= link_to "All Tasks", tasks_path, class: "btn btn-secondary" %>
-  </div>
-</div>
-
-<div class="stats-grid">
-  <div class="stat-card">
-    <div class="stat-number"><%= @total_tasks %></div>
-    <div class="stat-label">Total Tasks</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-number"><%= @completed_tasks %></div>
-    <div class="stat-label">Completed</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-number"><%= @priority_tasks %></div>
-    <div class="stat-label">Priority</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-number"><%= @overdue_tasks %></div>
-    <div class="stat-label">Overdue</div>
+    <%= link_to "Add category", new_category_path, class: "btn btn-primary" %>
+    <%= link_to "View all tasks", tasks_path, class: "btn btn-primary" %>
   </div>
 </div>
 

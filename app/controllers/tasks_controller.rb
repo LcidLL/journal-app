@@ -4,23 +4,11 @@ class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
   before_action :check_owner
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
-  rescue_from ActiveRecord::InvalidForeignKey, with: :render_internal_error
 
   def index
     @tasks = current_user.tasks.includes(:category).ordered_by_due_date
-    @overdue_tasks = @tasks.overdue
-    @due_today_tasks = @tasks.due_today
-    @completed_tasks = @tasks.completed
-    @priority_tasks = @tasks.priority
-    @in_progress_tasks = @tasks.in_progress
-    @due_this_week_tasks = @tasks.due_this_week
-    
-    # For User Story #8: Today's priorities
-    @today_priority_tasks = @tasks.today_priorities
-    @high_priority_today = @tasks.high_priority_today
-  end
-
-  def show
+    @overdue_tasks, @due_today_tasks, @completed_tasks, @priority_tasks, @in_progress_tasks, @due_this_week_tasks = @tasks.overdue, @tasks.due_today, @tasks.completed, @tasks.priority, @tasks.in_progress, @tasks.due_this_week
+    @today_priority_tasks, @high_priority_today = @tasks.today_priorities, @tasks.high_priority_today
   end
 
   def new
@@ -38,9 +26,6 @@ class TasksController < ApplicationController
     end
   end
 
-  def edit
-  end
-
   def update
     if @task.update(task_params)
       redirect_to @category, notice: "Task '#{@task.task_name}' was successfully updated!"
@@ -56,15 +41,18 @@ class TasksController < ApplicationController
     redirect_to @category, notice: "Task '#{task_name}' was successfully deleted."
   end
 
-  private
+  def show
+  end
 
-  def render_not_found
+  def edit
+  end
+
+  def record_not_found
     redirect_to categories_path, alert: 'Task not found.'
   end
 
-  def render_internal_error
-    redirect_to categories_path, alert: 'An error occurred. Please try again.'
-  end
+
+  private
 
   def set_category
     @category = Category.find(params[:category_id]) if params[:category_id]

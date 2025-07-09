@@ -37,40 +37,10 @@
 </div>
 
 <div class="btn-group">
-  <%= link_to "Back to Categories", categories_path, class: "btn btn-primary" %>
+  <%= link_to "Back to Journal", categories_path, class: "btn btn-primary" %>
 </div>
 
 <br>
-
-<% if @overdue_tasks.any? %>
-  <div class="section">
-    <h2>Overdue Tasks</h2>
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Task Name</th>
-            <th>Due Date</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @overdue_tasks.each do |task| %>
-            <tr class="overdue-row">
-              <td><%= link_to task.task_name, [@category, task] %></td>
-              <td><%= task.due_date.strftime("%B %d, %Y") %></td>
-              <td><span class="badge badge-danger"><%= task.status.humanize %></span></td>
-              <td class="table-actions">
-                <%= link_to "Edit", edit_category_task_path(@category, task), class: "btn btn-sm" %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  </div>
-<% end %>
 
 <div class="section">
   <div class="section-header">
