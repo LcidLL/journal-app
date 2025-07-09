@@ -1,10 +1,21 @@
 <div class="page-header">
-  <h1>All Tasks</h1>
+  <h1><%= @category.category_name %></h1>
   <div class="page-actions">
-    <%= link_to "Categories", categories_path, class: "btn btn-secondary" %>
-    <%= link_to "Dashboard", root_path, class: "btn btn-secondary" %>
+    <%= link_to "Edit", edit_category_path(@category), class: "btn btn-secondary" %>
+    <%= link_to "Delete", @category, 
+        data: { 
+          turbo_method: :delete, 
+          turbo_confirm: "Are you sure? This will delete the tasks in this category." 
+        }, 
+        class: "btn btn-danger" %>
   </div>
 </div>
+
+<% if @category.description.present? %>
+  <div class="section">
+    <p><%= simple_format(@category.description) %></p>
+  </div>
+<% end %>
 
 <div class="stats-grid">
   <div class="stat-card">
@@ -16,10 +27,6 @@
     <div class="stat-label">Completed</div>
   </div>
   <div class="stat-card">
-    <div class="stat-number"><%= @in_progress_tasks.count %></div>
-    <div class="stat-label">In Progress</div>
-  </div>
-  <div class="stat-card">
     <div class="stat-number"><%= @priority_tasks.count %></div>
     <div class="stat-label">Priority</div>
   </div>
@@ -29,37 +36,11 @@
   </div>
 </div>
 
-<!-- User Story #8: Today's Priority Tasks Section -->
-<% if @today_priority_tasks.any? %>
-  <div class="section">
-    <h2>Today's Priority Tasks</h2>
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Task Name</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @today_priority_tasks.each do |task| %>
-            <tr class="due-today-row">
-              <td><%= link_to task.task_name, [task.category, task] %></td>
-              <td><%= task.category.category_name %></td>
-              <td><%= truncate(task.description, length: 50) if task.description.present? %></td>
-              <td class="table-actions">
-                <%= link_to "View", [task.category, task], class: "btn btn-sm" %>
-                <%= link_to "Edit", edit_category_task_path(task.category, task), class: "btn btn-sm" %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  </div>
-<% end %>
+<div class="btn-group">
+  <%= link_to "Back to Categories", categories_path, class: "btn btn-primary" %>
+</div>
+
+<br>
 
 <% if @overdue_tasks.any? %>
   <div class="section">
@@ -69,7 +50,6 @@
         <thead>
           <tr>
             <th>Task Name</th>
-            <th>Category</th>
             <th>Due Date</th>
             <th>Status</th>
             <th>Actions</th>
@@ -78,13 +58,11 @@
         <tbody>
           <% @overdue_tasks.each do |task| %>
             <tr class="overdue-row">
-              <td><%= link_to task.task_name, [task.category, task] %></td>
-              <td><%= task.category.category_name %></td>
+              <td><%= link_to task.task_name, [@category, task] %></td>
               <td><%= task.due_date.strftime("%B %d, %Y") %></td>
               <td><span class="badge badge-danger"><%= task.status.humanize %></span></td>
               <td class="table-actions">
-                <%= link_to "View", [task.category, task], class: "btn btn-sm" %>
-                <%= link_to "Edit", edit_category_task_path(task.category, task), class: "btn btn-sm" %>
+                <%= link_to "Edit", edit_category_task_path(@category, task), class: "btn btn-sm" %>
               </td>
             </tr>
           <% end %>
@@ -95,14 +73,19 @@
 <% end %>
 
 <div class="section">
-  <h2>All Tasks</h2>
+  <div class="section-header">
+    <h2>Tasks</h2>
+    <% if @tasks.any? %>
+      <%= link_to "Add Task", new_category_task_path(@category), class: "btn btn-primary btn-sm" %>
+    <% end %>
+  </div>
+
   <% if @tasks.any? %>
     <div class="table-container">
       <table>
         <thead>
           <tr>
             <th>Task Name</th>
-            <th>Category</th>
             <th>Description</th>
             <th>Due Date</th>
             <th>Status</th>
@@ -112,8 +95,7 @@
         <tbody>
           <% @tasks.each do |task| %>
             <tr class="<%= 'overdue-row' if task.overdue? %><%= 'due-today-row' if task.due_today? %><%= 'completed-row' if task.status == 'completed' %>">
-              <td><%= link_to task.task_name, [task.category, task] %></td>
-              <td><%= task.category.category_name %></td>
+              <td><%= link_to task.task_name, [@category, task] %></td>
               <td><%= truncate(task.description, length: 50) if task.description.present? %></td>
               <td>
                 <%= task.due_date.strftime("%B %d, %Y") if task.due_date.present? %>
@@ -135,9 +117,9 @@
                 <% end %>
               </td>
               <td class="table-actions">
-                <%= link_to "View", [task.category, task], class: "btn btn-sm" %>
-                <%= link_to "Edit", edit_category_task_path(task.category, task), class: "btn btn-sm" %>
-                <%= link_to "Delete", [task.category, task], 
+                <%= link_to "View", [@category, task], class: "btn btn-sm" %>
+                <%= link_to "Edit", edit_category_task_path(@category, task), class: "btn btn-sm" %>
+                <%= link_to "Delete", [@category, task], 
                   data: { 
                     turbo_method: :delete, 
                     turbo_confirm: "Are you sure?" 
@@ -152,6 +134,8 @@
   <% else %>
     <div class="empty-state">
       <h3>No tasks yet</h3>
+      <p>Add your first task to get started.</p>
+      <%= link_to "Add First Task", new_category_task_path(@category), class: "btn btn-primary" %>
     </div>
   <% end %>
 </div>

@@ -10,29 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_06_100537) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_09_151851) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "books", force: :cascade do |t|
-    t.string "title"
-    t.string "author"
-    t.date "publish_date"
-    t.text "summary"
+  create_table "categories", force: :cascade do |t|
+    t.string "category_name", null: false
+    t.text "description"
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_books_on_user_id"
+    t.index ["category_name"], name: "index_categories_on_category_name"
+    t.index ["user_id", "category_name"], name: "index_categories_on_user_id_and_category_name"
+    t.index ["user_id"], name: "index_categories_on_user_id"
   end
 
   create_table "tasks", force: :cascade do |t|
-    t.string "reading_status"
-    t.text "chapter_summary"
-    t.date "target_date"
-    t.bigint "book_id", null: false
+    t.string "task_name", null: false
+    t.text "description"
+    t.date "due_date"
+    t.string "status", default: "pending", null: false
+    t.bigint "category_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["book_id"], name: "index_tasks_on_book_id"
+    t.index ["category_id", "due_date"], name: "index_tasks_on_category_id_and_due_date"
+    t.index ["category_id"], name: "index_tasks_on_category_id"
+    t.index ["due_date"], name: "index_tasks_on_due_date"
+    t.index ["status"], name: "index_tasks_on_status"
   end
 
   create_table "users", force: :cascade do |t|
@@ -43,10 +47,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_06_100537) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.boolean "is_admin", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "books", "users"
-  add_foreign_key "tasks", "books"
+  add_foreign_key "categories", "users"
+  add_foreign_key "tasks", "categories"
 end

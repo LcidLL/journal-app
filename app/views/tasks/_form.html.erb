@@ -1,5 +1,5 @@
 <div class="form-container">
-  <%= form_with model: [@book, @task], local: true do |form| %>
+  <%= form_with model: [@category, @task], local: true do |form| %>
     <% if @task.errors.any? %>
       <div class="alert alert-danger">
         <h4><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h4>
@@ -12,47 +12,58 @@
     <% end %>
 
     <div class="form-group">
-      <%= form.label :reading_status, class: "form-label" %>
+      <%= form.label :task_name, class: "form-label" %>
       <span class="required">*</span>
-      <%= form.select :reading_status, 
-          options_for_select(Task::READING_STATUSES.map { |status| [status.humanize, status] }, @task.reading_status), 
-          { prompt: "Select reading status" }, 
-          { class: "form-control #{'is-invalid' if @task.errors[:reading_status].any?}" } %>
-      <% if @task.errors[:reading_status].any? %>
+      <%= form.text_field :task_name, class: "form-control #{'is-invalid' if @task.errors[:task_name].any?}", 
+                         placeholder: "Enter task name", maxlength: 255 %>
+      <% if @task.errors[:task_name].any? %>
         <div class="invalid-feedback">
-          <%= @task.errors[:reading_status].first %>
+          <%= @task.errors[:task_name].first %>
         </div>
       <% end %>
     </div>
 
     <div class="form-group">
-      <%= form.label :target_date, class: "form-label" %>
-      <%= form.date_field :target_date, class: "form-control #{'is-invalid' if @task.errors[:target_date].any?}", 
-                         min: Date.current %>
-      <% if @task.errors[:target_date].any? %>
+      <%= form.label :description, class: "form-label" %>
+      <%= form.text_area :description, rows: 4, class: "form-control #{'is-invalid' if @task.errors[:description].any?}", 
+                        placeholder: "Enter task description (optional)", maxlength: 2000 %>
+      <% if @task.errors[:description].any? %>
         <div class="invalid-feedback">
-          <%= @task.errors[:target_date].first %>
-        </div>
-      <% end %>
-      <small class="form-text text-muted">Optional - Set a target date for this reading task</small>
-    </div>
-
-    <div class="form-group">
-      <%= form.label :chapter_summary, "Notes/Summary", class: "form-label" %>
-      <%= form.text_area :chapter_summary, rows: 4, 
-          class: "form-control #{'is-invalid' if @task.errors[:chapter_summary].any?}", 
-          placeholder: "Add notes about this reading task...", maxlength: 2000 %>
-      <% if @task.errors[:chapter_summary].any? %>
-        <div class="invalid-feedback">
-          <%= @task.errors[:chapter_summary].first %>
+          <%= @task.errors[:description].first %>
         </div>
       <% end %>
       <small class="form-text text-muted">Optional - Maximum 2000 characters</small>
     </div>
 
+    <div class="form-group">
+      <%= form.label :due_date, class: "form-label" %>
+      <%= form.date_field :due_date, class: "form-control #{'is-invalid' if @task.errors[:due_date].any?}", 
+                         min: Date.current %>
+      <% if @task.errors[:due_date].any? %>
+        <div class="invalid-feedback">
+          <%= @task.errors[:due_date].first %>
+        </div>
+      <% end %>
+      <small class="form-text text-muted">Optional - When should this task be completed?</small>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :status, class: "form-label" %>
+      <span class="required">*</span>
+      <%= form.select :status, 
+          options_for_select(Task::STATUSES.map { |status| [status.humanize, status] }, @task.status), 
+          { prompt: "Select task status" }, 
+          { class: "form-control #{'is-invalid' if @task.errors[:status].any?}" } %>
+      <% if @task.errors[:status].any? %>
+        <div class="invalid-feedback">
+          <%= @task.errors[:status].first %>
+        </div>
+      <% end %>
+    </div>
+
     <div class="form-actions">
       <%= form.submit (@task.new_record? ? "Create Task" : "Update Task"), class: "btn btn-primary" %>
-      <%= link_to "Cancel", @book, class: "btn btn-secondary" %>
+      <%= link_to "Cancel", @category, class: "btn btn-secondary" %>
     </div>
   <% end %>
 </div>

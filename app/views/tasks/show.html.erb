@@ -1,59 +1,59 @@
-<div class="task-details">
-  <div class="task-header">
-    <h1>Reading Task Details</h1>
-    <h2>for "<%= @book.title %>" by <%= @book.author %></h2>
+<div class="page-header">
+  <h1>Task Details</h1>
+  <div class="page-actions">
+    <%= link_to "Edit", edit_category_task_path(@category, @task), class: "btn btn-primary" %>
+    <%= link_to "Delete", [@category, @task], 
+        data: { 
+          turbo_method: :delete, 
+          turbo_confirm: "Are you sure?" 
+        }, 
+        class: "btn btn-danger" %>
   </div>
+</div>
 
-  <div class="task-info">
-    <div class="status-section">
-      <h3>Status</h3>
-      <span class="badge badge-<%= @task.status_color %>">
-        <%= @task.reading_status.humanize %>
-      </span>
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title"><%= @task.task_name %></h2>
+    <div class="card-actions">
+      <% if @task.status == 'completed' %>
+        <span class="badge badge-success"><%= @task.status.humanize %></span>
+      <% elsif @task.status == 'in_progress' %>
+        <span class="badge badge-warning"><%= @task.status.humanize %></span>
+      <% else %>
+        <span class="badge"><%= @task.status.humanize %></span>
+      <% end %>
+      
       <% if @task.overdue? %>
         <span class="badge badge-danger">Overdue</span>
-      <% end %>
-    </div>
-
-    <% if @task.target_date.present? %>
-      <div class="date-section">
-        <h3>Target Date</h3>
-        <p><%= @task.target_date.strftime("%B %d, %Y") %></p>
-        <% if @task.target_date < Date.current && @task.reading_status != 'completed' %>
-          <small class="text-danger">
-            (<%= distance_of_time_in_words(@task.target_date, Date.current) %> overdue)
-          </small>
-        <% elsif @task.target_date > Date.current %>
-          <small class="text-info">
-            (<%= distance_of_time_in_words(Date.current, @task.target_date) %> remaining)
-          </small>
-        <% end %>
-      </div>
-    <% end %>
-
-    <% if @task.chapter_summary.present? %>
-      <div class="summary-section">
-        <h3>Notes/Summary</h3>
-        <div class="summary-content">
-          <%= simple_format(@task.chapter_summary) %>
-        </div>
-      </div>
-    <% end %>
-
-    <div class="dates-section">
-      <h3>Task Information</h3>
-      <p><strong>Created:</strong> <%= @task.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
-      <% if @task.updated_at != @task.created_at %>
-        <p><strong>Last Updated:</strong> <%= @task.updated_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+      <% elsif @task.due_today? %>
+        <span class="badge badge-warning">Due Today</span>
       <% end %>
     </div>
   </div>
 
-  <div class="task-actions">
-    <%= link_to "Edit Task", edit_book_task_path(@book, @task), class: "btn btn-warning" %>
-    <%= link_to "Delete Task", [@book, @task], 
-        data: { turbo_method: :delete, confirm: "Are you sure?" }, class: "btn btn-danger" %>
-    <%= link_to "Back to Book", @book, class: "btn btn-secondary" %>
-    <%= link_to "All Tasks", tasks_path, class: "btn btn-info" %>
-  </div>
+  <p><strong>Category:</strong> <%= link_to @category.category_name, @category %></p>
+
+  <% if @task.description.present? %>
+    <p><strong>Description:</strong></p>
+    <p><%= simple_format(@task.description) %></p>
+  <% end %>
+
+  <% if @task.due_date.present? %>
+    <p><strong>Due Date:</strong> <%= @task.due_date.strftime("%B %d, %Y") %></p>
+    <% if @task.overdue? %>
+      <p><strong>Overdue by:</strong> <%= distance_of_time_in_words(@task.due_date, Date.current) %></p>
+    <% elsif @task.due_date > Date.current %>
+      <p><strong>Time remaining:</strong> <%= distance_of_time_in_words(Date.current, @task.due_date) %></p>
+    <% end %>
+  <% end %>
+
+  <p><strong>Created:</strong> <%= @task.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+  <% if @task.updated_at != @task.created_at %>
+    <p><strong>Last Updated:</strong> <%= @task.updated_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+  <% end %>
+</div>
+
+<div class="btn-group">
+  <%= link_to "Back to Category", @category, class: "btn btn-secondary" %>
+  <%= link_to "All Tasks", tasks_path, class: "btn btn-secondary" %>
 </div>

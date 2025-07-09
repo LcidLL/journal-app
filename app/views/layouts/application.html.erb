@@ -1,25 +1,49 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Book App" %></title>
+    <title>Journal App</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
-    <%= yield :head %>
-
-    <link rel="manifest" href="/manifest.json">
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
-    <%= yield %>
+    <% if user_signed_in? %>
+      <div class="header">
+        <div class="container">
+          <div class="nav">
+            <div class="nav-brand">
+              <%= link_to "Journal App ", root_path %>
+            </div>
+            
+            <div class="nav-links">
+              <%= link_to "Back to Dashboard", dashboard_path %>
+            </div>
+            
+            <div class="nav-user">
+              <span class="welcome-text">Welcome, <%= current_user.full_name %></span>
+              <%= link_to "Edit Profile", edit_user_registration_path %>
+              <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-sm" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="container">
+      <div class="content">
+        <% if notice %>
+          <div class="alert alert-success"><%= notice %></div>
+        <% end %>
+
+        <% if alert %>
+          <div class="alert alert-error"><%= alert %></div>
+        <% end %>
+
+        <%= yield %>
+      </div>
+    </div>
   </body>
 </html>
