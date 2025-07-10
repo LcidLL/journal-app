@@ -28,7 +28,7 @@ class CategoriesController < ApplicationController
     if @category.save
       redirect_to @category, notice: "'#{@category.category_name}' category was successfully created!"
     else
-      flash.now[:alert] = "There were errors creating your category. Please check the fields below."
+      flash.now[:alert] = "There were errors creating your category."
       render :new, status: :unprocessable_entity
     end
   end
@@ -38,7 +38,7 @@ class CategoriesController < ApplicationController
     if @category.update(category_params)
       redirect_to @category, notice: "'#{@category.category_name}' category was successfully updated!"
     else
-      flash.now[:alert] = "There were errors updating your category. Please check the fields below."
+      flash.now[:alert] = "There were errors updating your category."
       render :edit, status: :unprocessable_entity
     end
   end
@@ -51,8 +51,7 @@ class CategoriesController < ApplicationController
   end
 
   # EDIT
-  def edit
-  end
+  def edit; end
 
   # RESCUER
   def record_not_found

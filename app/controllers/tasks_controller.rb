@@ -46,11 +46,9 @@ class TasksController < ApplicationController
   end
 
   # SHOW & EDIT
-  def show
-  end
+  def show; end
 
-  def edit
-  end
+  def edit; end
 
   # RESCUER
   def record_not_found
