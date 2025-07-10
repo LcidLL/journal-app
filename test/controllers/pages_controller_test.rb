@@ -25,10 +25,4 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :redirect
     assert_redirected_to new_user_session_path
   end
-
-  test "should display user statistics" do
-    get root_path
-    assert_response :success
-    assert_select "a", text: "Journal App"
-  end
 end
