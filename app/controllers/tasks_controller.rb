@@ -5,19 +5,21 @@ class TasksController < ApplicationController
   before_action :check_owner
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
+  # INDEX
   def index
     @tasks = current_user.tasks.includes(:category).ordered_by_due_date
     @overdue_tasks, @due_today_tasks, @completed_tasks, @priority_tasks, @in_progress_tasks, @due_this_week_tasks = @tasks.overdue, @tasks.due_today, @tasks.completed, @tasks.priority, @tasks.in_progress, @tasks.due_this_week
     @today_priority_tasks, @high_priority_today = @tasks.today_priorities, @tasks.high_priority_today
   end
 
+  # NEW
   def new
     @task = @category.tasks.build
   end
 
+  # CREATE
   def create
     @task = @category.tasks.build(task_params)
-    
     if @task.save
       redirect_to @category, notice: "Task '#{@task.task_name}' was successfully created!"
     else
@@ -26,6 +28,7 @@ class TasksController < ApplicationController
     end
   end
 
+  # UPDATE
   def update
     if @task.update(task_params)
       redirect_to @category, notice: "Task '#{@task.task_name}' was successfully updated!"
@@ -35,18 +38,21 @@ class TasksController < ApplicationController
     end
   end
 
+  # DESTROY
   def destroy
     task_name = @task.task_name
     @task.destroy
     redirect_to @category, notice: "Task '#{task_name}' was successfully deleted."
   end
 
+  # SHOW & EDIT
   def show
   end
 
   def edit
   end
 
+  # RESCUER
   def record_not_found
     redirect_to categories_path, alert: 'Task not found.'
   end

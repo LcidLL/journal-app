@@ -14,7 +14,6 @@
           <th>Category Name</th>
           <th>Description</th>
           <th>Tasks</th>
-          <th>Progress</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -24,7 +23,6 @@
             <td><%= link_to category.category_name, category %></td>
             <td><%= truncate(category.description, length: 50) if category.description.present? %></td>
             <td><%= category.tasks.count %></td>
-            <td><%= category.task_progress %>%</td>
             <td class="table-actions">
               <%= link_to "View", category, class: "btn btn-sm" %>
               <%= link_to "Edit", edit_category_path(category), class: "btn btn-sm" %>
